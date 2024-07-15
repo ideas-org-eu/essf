@@ -1,4 +1,3 @@
-Certainly! Below is a sample `README.md` file for the Ethical and Sustainable Search Framework (ESSF) project. It outlines the purpose, setup instructions, and basic usage of the project, providing clear documentation for both current and future developers.
 
 ```markdown
 # Ethical and Sustainable Search Framework (ESSF)
@@ -67,9 +66,6 @@ To run tests for the API endpoints, execute:
 ```
 pytest
 ```
-
-## Contributing
-Contributions to the ESSF project are welcome! Please read our contributing guidelines in `CONTRIBUTING.md` (if available) for details on our code of conduct, and the process for submitting pull requests.
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
