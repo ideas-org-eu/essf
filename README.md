@@ -33,8 +33,8 @@ To set up the ESSF project, follow these steps:
 
 1. **Clone the repository:**
    ```
-   git clone https://example.com/essf.git
-   cd ESSF
+   git clone https://github.com/ideas-org-eu/essf.git
+   cd essf
    ```
 
 2. **Install dependencies:**
