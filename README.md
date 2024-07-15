@@ -4,6 +4,7 @@
 The Ethical and Sustainable Search Framework (ESSF) is designed to integrate ethical and sustainability considerations into search technologies. It provides API endpoints for evaluating content, products, and services based on predefined ethical and sustainability criteria. The framework leverages AI models and data processing services to assess and rank search results, facilitating informed decision-making for users.
 
 ## Project Structure
+```
 ESSF/
 │
 ├── api/
@@ -25,6 +26,7 @@ ESSF/
 │
 ├── requirements.txt    # Project dependencies
 └── README.md           # Project overview
+```
 
 ## Installation
 To set up the ESSF project, follow these steps:
