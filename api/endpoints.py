@@ -1,9 +1,8 @@
 from flask import request, jsonify
-from models.ethics_model import check_ethics
-from models.sustainability_model import check_sustainability
+from essf.models.ethics_model import check_ethics
+from essf.models.sustainability_model import check_sustainability
 
 def configure_routes(app):
-
     @app.route('/api/evaluate/ethics', methods=['POST'])
     def evaluate_ethics():
         content = request.json
