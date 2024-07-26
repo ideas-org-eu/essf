@@ -4,42 +4,177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESSF Evaluation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            background: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            animation: fadeIn 1.5s;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #ff7e5f;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #ff7e5f;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #feb47b;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        #result.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        #result.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
 </head>
 <body>
-    <h1>ESSF Evaluation</h1>
-    <form id="evaluationForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-        <label for="value">Value:</label>
-        <input type="number" id="value" name="value" required>
-        <button type="submit">Evaluate Ethics</button>
-        <button type="button" onclick="evaluateSustainability()">Evaluate Sustainability</button>
-    </form>
-    <div id="result"></div>
+    <div class="container">
+        <h1>ESSF Evaluation</h1>
+        <form id="evaluationForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="value">Value:</label>
+            <input type="number" id="value" name="value" required>
+            <label for="emissions">Emissions:</label>
+            <input type="number" id="emissions" name="emissions" required>
+            <label for="industry_average_emissions">Industry Average Emissions:</label>
+            <input type="number" id="industry_average_emissions" name="industry_average_emissions" required>
+            <label for="recycling_program">Recycling Program:</label>
+            <input type="checkbox" id="recycling_program" name="recycling_program">
+            <label for="waste_reduction">Waste Reduction:</label>
+            <input type="checkbox" id="waste_reduction" name="waste_reduction">
+            <label for="water_efficiency">Water Efficiency:</label>
+            <input type="checkbox" id="water_efficiency" name="water_efficiency">
+            <label for="energy_efficiency">Energy Efficiency:</label>
+            <input type="checkbox" id="energy_efficiency" name="energy_efficiency">
+            <label for="uses_renewable_energy">Uses Renewable Energy:</label>
+            <input type="checkbox" id="uses_renewable_energy" name="uses_renewable_energy">
+            <button type="submit">Evaluate Ethics</button>
+            <button type="button" onclick="evaluateSustainability()">Evaluate Sustainability</button>
+        </form>
+        <div id="result"></div>
+    </div>
     <script>
         document.getElementById('evaluationForm').addEventListener('submit', async function (event) {
             event.preventDefault();
             const name = document.getElementById('name').value;
             const value = document.getElementById('value').value;
-            const response = await fetch('/api/evaluate/ethics', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, value })
-            });
-            const result = await response.json();
-            document.getElementById('result').innerText = JSON.stringify(result);
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'none';
+            try {
+                const response = await fetch('/api/evaluate/ethics', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, value })
+                });
+                const result = await response.json();
+                resultDiv.className = 'success';
+                resultDiv.innerText = `Ethics Score: ${result.ethics_score}`;
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.innerText = `Error: ${error.message}`;
+                resultDiv.style.display = 'block';
+            }
         });
 
         async function evaluateSustainability() {
             const name = document.getElementById('name').value;
             const value = document.getElementById('value').value;
-            const response = await fetch('/api/evaluate/sustainability', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, value })
-            });
-            const result = await response.json();
-            document.getElementById('result').innerText = JSON.stringify(result);
+            const emissions = document.getElementById('emissions').value;
+            const industry_average_emissions = document.getElementById('industry_average_emissions').value;
+            const recycling_program = document.getElementById('recycling_program').checked;
+            const waste_reduction = document.getElementById('waste_reduction').checked;
+            const water_efficiency = document.getElementById('water_efficiency').checked;
+            const energy_efficiency = document.getElementById('energy_efficiency').checked;
+            const uses_renewable_energy = document.getElementById('uses_renewable_energy').checked;
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'none';
+            try {
+                const response = await fetch('/api/evaluate/sustainability', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        value,
+                        emissions,
+                        industry_average_emissions,
+                        recycling_program,
+                        waste_reduction,
+                        water_efficiency,
+                        energy_efficiency,
+                        uses_renewable_energy
+                    })
+                });
+                const result = await response.json();
+                resultDiv.className = 'success';
+                resultDiv.innerHTML = `
+                    <strong>Status: ${result.status}</strong><br>
+                    <strong>Total Score: ${result.total_score}</strong><br>
+                    Carbon Footprint Score: ${result.details.carbon_footprint_score}<br>
+                    Waste Management Score: ${result.details.waste_management_score}<br>
+                    Resource Usage Score: ${result.details.resource_usage_score}
+                `;
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.innerText = `Error: ${error.message}`;
+                resultDiv.style.display = 'block';
+            }
         }
     </script>
 </body>
