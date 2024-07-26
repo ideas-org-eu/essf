@@ -1,6 +1,6 @@
 import pytest
 from flask import json
-from essf.api.app import app
+from api.app import app
 
 @pytest.fixture
 def client():
@@ -8,31 +8,17 @@ def client():
         yield client
 
 def test_evaluate_ethics(client):
-    response = client.post('/api/evaluate/ethics', json={
-        "fair_wages": True,
-        "safe_conditions": True,
-        "child_labor": False,
-        "transparency": True,
-        "corruption": False,
-        "data_protection_compliance": True,
-        "privacy_protection": True
-    })
+    """Test the ethics evaluation endpoint."""
+    response = client.post('/api/evaluate/ethics', json={"data": "test data"})
     assert response.status_code == 200
     data = json.loads(response.data)
     assert 'status' in data
-    assert data['status'] in ['Ethical', 'Needs Improvement']
+    assert data['status'] == 'ethical'
 
 def test_evaluate_sustainability(client):
-    response = client.post('/api/evaluate/sustainability', json={
-        "emissions": 50,
-        "industry_average_emissions": 100,
-        "recycling_program": True,
-        "waste_reduction": True,
-        "water_efficiency": True,
-        "energy_efficiency": True,
-        "uses_renewable_energy": True
-    })
+    """Test the sustainability evaluation endpoint."""
+    response = client.post('/api/evaluate/sustainability', json={"data": "test data"})
     assert response.status_code == 200
     data = json.loads(response.data)
     assert 'status' in data
-    assert data['status'] in ['Sustainable', 'Needs Improvement']
+    assert data['status'] == 'sustainable'

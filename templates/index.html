@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESSF Evaluation</title>
+</head>
+<body>
+    <h1>ESSF Evaluation</h1>
+    <form id="evaluationForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="value">Value:</label>
+        <input type="number" id="value" name="value" required>
+        <button type="submit">Evaluate Ethics</button>
+        <button type="button" onclick="evaluateSustainability()">Evaluate Sustainability</button>
+    </form>
+    <div id="result"></div>
+    <script>
+        document.getElementById('evaluationForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const value = document.getElementById('value').value;
+            const response = await fetch('/api/evaluate/ethics', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, value })
+            });
+            const result = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(result);
+        });
+
+        async function evaluateSustainability() {
+            const name = document.getElementById('name').value;
+            const value = document.getElementById('value').value;
+            const response = await fetch('/api/evaluate/sustainability', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, value })
+            });
+            const result = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(result);
+        }
+    </script>
+</body>
+</html>
