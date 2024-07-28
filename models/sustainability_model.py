@@ -1,10 +1,12 @@
 def evaluate_carbon_footprint(data):
-    # Example criteria: below industry average emissions
+  
+    # Evaluates the carbon footprint based on emissions compared to industry average.
     score = 50 if data.get('emissions', float('inf')) < data.get('industry_average_emissions', float('inf')) else 0
     return score
 
 def evaluate_waste_management(data):
-    # Example criteria: effective recycling and waste reduction programs
+  
+    # Evaluates waste management based on the presence of recycling programs and waste reduction efforts.
     score = 0
     if data.get('recycling_program', False):
         score += 30
@@ -13,7 +15,8 @@ def evaluate_waste_management(data):
     return score
 
 def evaluate_resource_usage(data):
-    # Example criteria: efficient use of water and energy, renewable resources
+    # Evaluates resource usage based on efficiency in water and energy usage, and use of renewable energy.
+
     score = 0
     if data.get('water_efficiency', False):
         score += 20
@@ -22,6 +25,21 @@ def evaluate_resource_usage(data):
     if data.get('uses_renewable_energy', False):
         score += 10
     return score
+
+def check_sustainability(data):
+    """
+    Checks the sustainability of a given entity based on various criteria and returns a detailed score.
+    """
+    carbon_score = evaluate_carbon_footprint(data)
+    waste_score = evaluate_waste_management(data)
+    resource_score = evaluate_resource_usage(data)
+
+    # Adjusted scoring weights for a balanced evaluation
+    total_score = carbon_score + waste_score + resource_score
+    status = "Sustainable" if total_score >= 80 else "Needs Improvement"
+
+    return {
+        "status": status,
 
 def check_sustainability(data):
     carbon_score = evaluate_carbon_footprint(data)
