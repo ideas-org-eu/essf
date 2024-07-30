@@ -26,20 +26,6 @@ def evaluate_resource_usage(data):
         score += 10
     return score
 
-def check_sustainability(data):
-    """
-    Checks the sustainability of a given entity based on various criteria and returns a detailed score.
-    """
-    carbon_score = evaluate_carbon_footprint(data)
-    waste_score = evaluate_waste_management(data)
-    resource_score = evaluate_resource_usage(data)
-
-    # Adjusted scoring weights for a balanced evaluation
-    total_score = carbon_score + waste_score + resource_score
-    status = "Sustainable" if total_score >= 80 else "Needs Improvement"
-
-    return {
-        "status": status,
 
 def check_sustainability(data):
     carbon_score = evaluate_carbon_footprint(data)
