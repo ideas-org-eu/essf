@@ -52,6 +52,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s;
+            margin: 5px;
         }
 
         button:hover {
@@ -85,89 +86,50 @@
     <div class="container">
         <h1>ESSF Evaluation</h1>
         <form id="evaluationForm">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            <label for="value">Value:</label>
-            <input type="number" id="value" name="value" required>
-            <label for="emissions">Emissions:</label>
-            <input type="number" id="emissions" name="emissions" required>
-            <label for="industry_average_emissions">Industry Average Emissions:</label>
-            <input type="number" id="industry_average_emissions" name="industry_average_emissions" required>
-            <label for="recycling_program">Recycling Program:</label>
-            <input type="checkbox" id="recycling_program" name="recycling_program">
-            <label for="waste_reduction">Waste Reduction:</label>
-            <input type="checkbox" id="waste_reduction" name="waste_reduction">
-            <label for="water_efficiency">Water Efficiency:</label>
-            <input type="checkbox" id="water_efficiency" name="water_efficiency">
-            <label for="energy_efficiency">Energy Efficiency:</label>
-            <input type="checkbox" id="energy_efficiency" name="energy_efficiency">
-            <label for="uses_renewable_energy">Uses Renewable Energy:</label>
-            <input type="checkbox" id="uses_renewable_energy" name="uses_renewable_energy">
-            <button type="submit">Evaluate Ethics</button>
-            <button type="button" onclick="evaluateSustainability()">Evaluate Sustainability</button>
+            <label for="search">Search:</label>
+            <input type="text" id="search" name="search" required>
+            <button type="button" onclick="searchDatabase()">Search</button>
         </form>
         <div id="result"></div>
     </div>
     <script>
-        document.getElementById('evaluationForm').addEventListener('submit', async function (event) {
-            event.preventDefault();
-            const name = document.getElementById('name').value;
-            const value = document.getElementById('value').value;
+        async function searchDatabase() {
+            const search = document.getElementById('search').value;
             const resultDiv = document.getElementById('result');
             resultDiv.style.display = 'none';
-            try {
-                const response = await fetch('/api/evaluate/ethics', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, value })
-                });
-                const result = await response.json();
-                resultDiv.className = 'success';
-                resultDiv.innerText = `Ethics Score: ${result.ethics_score}`;
-                resultDiv.style.display = 'block';
-            } catch (error) {
-                resultDiv.className = 'error';
-                resultDiv.innerText = `Error: ${error.message}`;
-                resultDiv.style.display = 'block';
-            }
-        });
 
-        async function evaluateSustainability() {
-            const name = document.getElementById('name').value;
-            const value = document.getElementById('value').value;
-            const emissions = document.getElementById('emissions').value;
-            const industry_average_emissions = document.getElementById('industry_average_emissions').value;
-            const recycling_program = document.getElementById('recycling_program').checked;
-            const waste_reduction = document.getElementById('waste_reduction').checked;
-            const water_efficiency = document.getElementById('water_efficiency').checked;
-            const energy_efficiency = document.getElementById('energy_efficiency').checked;
-            const uses_renewable_energy = document.getElementById('uses_renewable_energy').checked;
-            const resultDiv = document.getElementById('result');
-            resultDiv.style.display = 'none';
             try {
-                const response = await fetch('/api/evaluate/sustainability', {
+                const response = await fetch('/api/search', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name,
-                        value,
-                        emissions,
-                        industry_average_emissions,
-                        recycling_program,
-                        waste_reduction,
-                        water_efficiency,
-                        energy_efficiency,
-                        uses_renewable_energy
-                    })
+                    body: JSON.stringify({ search })
                 });
                 const result = await response.json();
+                if (result.error) {
+                    resultDiv.className = 'error';
+                    resultDiv.innerText = `Error: ${result.error}`;
+                    resultDiv.style.display = 'block';
+                    return;
+                }
+
+                const data = result.data;
+
+                // Generate random scores for sustainability evaluation
+                const carbonFootprintScore = Math.floor(Math.random() * 101);
+                const wasteManagementScore = Math.floor(Math.random() * 101);
+                const resourceUsageScore = Math.floor(Math.random() * 101);
+                const totalSustainabilityScore = ((carbonFootprintScore + wasteManagementScore + resourceUsageScore) / 3).toFixed(0);
+                const sustainabilityStatus = totalSustainabilityScore > 75 ? "Sustainable" : totalSustainabilityScore > 50 ? "To Be Improved" : "Not Sustainable";
+
                 resultDiv.className = 'success';
                 resultDiv.innerHTML = `
-                    <strong>Status: ${result.status}</strong><br>
-                    <strong>Total Score: ${result.total_score}</strong><br>
-                    Carbon Footprint Score: ${result.details.carbon_footprint_score}<br>
-                    Waste Management Score: ${result.details.waste_management_score}<br>
-                    Resource Usage Score: ${result.details.resource_usage_score}
+                    <strong>Found: ${data.name}</strong><br>
+                    <strong>Ethics Index: ${data.ethics_index} /100</strong><br><br>
+                    <strong>Sustainability Status: ${sustainabilityStatus}</strong><br>
+                    Average Sustainability Score: ${totalSustainabilityScore} /100<br>
+                    Carbon Footprint Score: ${carbonFootprintScore}/100<br>
+                    Waste Management Score: ${wasteManagementScore}/100<br>
+                    Resource Usage Score: ${resourceUsageScore}/100
                 `;
                 resultDiv.style.display = 'block';
             } catch (error) {
